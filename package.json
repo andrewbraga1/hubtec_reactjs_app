@@ -2,8 +2,12 @@
   "name": "task-app",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3000",
   "dependencies": {
+    "axios": "^0.19.0",
+    "immutability-helper": "^3.0.1",
     "react": "^16.9.0",
+    "react-datepicker": "^2.8.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.0.1"
   },
