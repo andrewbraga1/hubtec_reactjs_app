@@ -1,14 +1,22 @@
 import React, { Component } from 'react'
+import moment from 'moment';
 import axios from 'axios'
 import update from 'immutability-helper'
-import DatePicker from 'react-datepicker'
+import DatePicker from '@trendmicro/react-datepicker';
+import '@trendmicro/react-datepicker/dist/react-datepicker.css';
+import Auth from 'j-toker';
+
 class TasksContainer extends Component {
   constructor(props) {
     super(props)
     this.state = {
       tasks: [],
-      inputValue: ''
+      deadLine: moment().format('YYYY-MM-DD'),
+      inputValue: '',
+      //headers: Auth.configBase.formatToken
     }
+    console.log(Auth);
+    
   }
   
   componentDidMount() {
@@ -16,7 +24,11 @@ class TasksContainer extends Component {
   }
 
   getTasks() {
-    axios.get('/api/v1/tasks')
+    //console.log(this.state.headers);
+    
+    axios.get('/api/v1/tasks',{
+       headers: this.state.headers
+     })
     .then(response => {
       this.setState({tasks: response.data})
     })
@@ -42,6 +54,7 @@ class TasksContainer extends Component {
         })
       })
       .catch(error => console.log(error))      
+      
       
       
   }
@@ -91,16 +104,13 @@ class TasksContainer extends Component {
                     name="inputValue"
                     value={this.state.inputValue} onChange={this.handleChange} />
                     {" "}
-                    <DatePicker
-                        name="deadLine"
-                        selected={this.state.startDate}
-                        onChange={this.handleChange}
-                        showTimeSelect
-                        timeFormat="HH:mm"
-                        timeIntervals={15}
-                        dateFormat="MMMM d, yyyy h:mm aa"
-                        timeCaption="time"
-                    />
+                     <DatePicker
+                      date={this.state.deadLine}
+                      onSelect={deadLine => {
+                          this.setState(state => ({ deadLine: deadLine }));
+                      }}
+                   />
+                   
             </div> 
             <div align="right"><button className="myButton pull-right"onClick={this.createTask}>Add task</button></div>   
             

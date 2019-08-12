@@ -1,18 +1,32 @@
 import React, { Component } from 'react';
 import './App.css';
-import TasksContainer from './components/taskContainers'
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Route } from 'react-router';
+import LoginPage from './LoginPage';
+import TaskPage from './TaskPage';
+import Auth from 'j-toker';
+//import $ from 'jquery';
+
+Auth.configure({apiUrl: 'http://localhost:3000/'});
+
 
 class App extends Component {
+  
   render() {
+   
     return (
-      <div className="container">
-        <div className="header">
-          <h1>Task List</h1>
-        </div>
-        <TasksContainer />
-      </div>
+      <Router>
+        <>
+          
+          <Route exact path='/' component={LoginPage} />
+          <Route path='/login' component={LoginPage} />
+          <Route path='/task' component={TaskPage} />
+        </>
+      </Router>
     );
   }
 }
+
+ 
 
 export default App;
