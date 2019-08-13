@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import './App.css';
-import axios from 'axios';
-import Auth from 'j-toker';
-
+import React, { Component } from "react";
+import "./App.css";
+import axios from "axios";
+//import Auth from "j-toker";
+import { connect } from "react-redux";
+import { setUser } from "./actions/Login";
+import { userInfo, login } from "./actions/UserProfile";
 
 class LoginPage extends Component {
-   
+  constructor(props) {
+    super(props);
 
-  constructor() {
-    super();
-    
     this.state = {
-      username: '',
-      password: '',
-      error: '',
+      username: "",
+      password: "",
+      error: ""
     };
 
     this.handlePassChange = this.handlePassChange.bind(this);
@@ -21,51 +21,57 @@ class LoginPage extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.dismissError = this.dismissError.bind(this);
   }
-
+  componentDidMount() {}
   dismissError() {
-    this.setState({ error: '' });
+    this.setState({ error: "" });
   }
 
   handleSubmit(evt) {
     evt.preventDefault();
     const { history } = this.props;
 
-     if (!this.state.username) {
-       return this.setState({ error: 'Username is required' });
-     }
-     if (!this.state.password) {
-       return this.setState({ error: 'Password is required' });
+    if (!this.state.username) {
+      return this.setState({ error: "Username is required" });
     }
-     var serviceBaseUrl = "http://localhost:3000";
-      axios.post(serviceBaseUrl+'/api/auth/sign_in', {
-      
-          email: this.state.username,
-           password: this.state.password
-       })
-       .then(response => {
-           //console.log(response);
-           
-         if(response.status === 200){
-           console.log(response.headers);
-           
-             history.push('task');
+    if (!this.state.password) {
+      return this.setState({ error: "Password is required" });
+    }
+    var serviceBaseUrl = "http://localhost:3000";
+    axios.defaults.headers.post["Content-Type"] = "application/json";
+    axios
+      .post(serviceBaseUrl + "/api/auth/sign_in", {
+        email: this.state.username,
+        password: this.state.password
+      })
+      .then(response => {
+        //console.log(response);
 
-         }
-        
-       })
-       .catch(error => console.log(error))     
-      
+        if (response.status === 200) {
+          //console.log(response.headers);
+          this.props.setUser(true);
+          this.props.userInfo(response.headers);
+          history.push("task");
+        } else {
+          window.location.reload();
+        }
+      })
+      .catch(error =>
+        window.alert(
+          "Ops :(",
+          "Algo de errado aconteceu. Tente novamente mais tarde."
+        )
+      );
   }
 
   handleUserChange(evt) {
     this.setState({
-      username: evt.target.value,
+      username: evt.target.value
     });
-  };
+  }
 
   handlePassChange(evt) {
     this.setState({
-      password: evt.target.value,
+      password: evt.target.value
     });
   }
 
@@ -75,25 +81,42 @@ class LoginPage extends Component {
 
     return (
       <div className="login-page">
-        <form className = "form " onSubmit={this.handleSubmit}>
-          {
-            this.state.error &&
+        <form className="form " onSubmit={this.handleSubmit}>
+          {this.state.error && (
             <h3 data-test="error" onClick={this.dismissError}>
               <button onClick={this.dismissError}>✖</button>
               {this.state.error}
             </h3>
-          }
+          )}
           <label>Email</label>
-          <input type="email" data-test="username" value={this.state.username} onChange={this.handleUserChange} />
+          <input
+            type="email"
+            data-test="username"
+            value={this.state.username}
+            onChange={this.handleUserChange}
+          />
 
           <label>Password</label>
-          <input type="password" data-test="password" value={this.state.password} onChange={this.handlePassChange} />
+          <input
+            type="password"
+            data-test="password"
+            value={this.state.password}
+            onChange={this.handlePassChange}
+          />
 
-          <button type="submit" value="Log In" data-test="submit" >Log in</button>
+          <button type="submit" value="Log In" data-test="submit">
+            Log in
+          </button>
         </form>
       </div>
     );
   }
 }
+const mapStateToProps = state => ({
+  isLoggedIn: state.user.isLoggedIn
+});
 
-export default LoginPage;
+export default connect(
+  mapStateToProps,
+  { userInfo, login, setUser }
+)(LoginPage);
