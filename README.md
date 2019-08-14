@@ -1,5 +1,11 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app)
 
+This project was designed for tasks management by users. Plus, all tasks are private to their owner.
+
+Every request to back end, the service checks if credentials matches the task related to an user.
+
+credentials for test : email:"hubtec@hubtec.com",password:"hubtec123456"
+                       or email: "teste@teste.com", password:"123456"
 ## Available Scripts
 
 In the project directory, you can run:

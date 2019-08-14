@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./App.css";
 import axios from "axios";
-//import Auth from "j-toker";
+import { REACT_APP_HOST } from "./constants";
 import { connect } from "react-redux";
 import { setUser } from "./actions/Login";
 import { userInfo, login } from "./actions/UserProfile";
@@ -36,10 +36,10 @@ class LoginPage extends Component {
     if (!this.state.password) {
       return this.setState({ error: "Password is required" });
     }
-    var serviceBaseUrl = "http://localhost:3000";
-    axios.defaults.headers.post["Content-Type"] = "application/json";
+    axios.defaults.headers["Content-Type"] = "application/json";
+
     axios
-      .post(serviceBaseUrl + "/api/auth/sign_in", {
+      .post(REACT_APP_HOST + "/api/auth/sign_in", {
         email: this.state.username,
         password: this.state.password
       })

@@ -4,7 +4,7 @@ import axios from "axios";
 import update from "immutability-helper";
 import DatePicker from "@trendmicro/react-datepicker";
 import "@trendmicro/react-datepicker/dist/react-datepicker.css";
-//import Auth from "j-toker";
+import { REACT_APP_HOST } from "../constants";
 import { store } from "../store";
 class TasksContainer extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class TasksContainer extends Component {
 
   getTasks() {
     axios
-      .get("/api/v1/tasks")
+      .get(REACT_APP_HOST + "/api/v1/tasks")
       .then(response => {
         this.setState({ tasks: response.data });
       })
@@ -39,7 +39,7 @@ class TasksContainer extends Component {
 
   createTask = e => {
     axios
-      .post("/api/v1/tasks", {
+      .post(REACT_APP_HOST + "/api/v1/tasks", {
         task: {
           name: this.state.inputValue,
           deadline: this.state.deadline
@@ -61,7 +61,9 @@ class TasksContainer extends Component {
 
   updateTask = (e, id) => {
     axios
-      .put(`/api/v1/tasks/${id}`, { task: { done: e.target.checked } })
+      .put(REACT_APP_HOST + `/api/v1/tasks/${id}`, {
+        task: { done: e.target.checked }
+      })
       .then(response => {
         const taskIndex = this.state.tasks.findIndex(
           x => x.id === response.data.id
@@ -78,7 +80,7 @@ class TasksContainer extends Component {
 
   deleteTask = id => {
     axios
-      .delete(`/api/v1/tasks/${id}`)
+      .delete(REACT_APP_HOST + `/api/v1/tasks/${id}`)
       .then(response => {
         const taskIndex = this.state.tasks.findIndex(x => x.id === id);
         const tasks = update(this.state.tasks, {
