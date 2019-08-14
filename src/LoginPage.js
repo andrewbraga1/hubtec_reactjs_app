@@ -57,8 +57,8 @@ class LoginPage extends Component {
       })
       .catch(error =>
         window.alert(
-          "Ops :(",
-          "Algo de errado aconteceu. Tente novamente mais tarde."
+          `Ops :(
+          Algo de errado aconteceu. Tente novamente mais tarde.`
         )
       );
   }
